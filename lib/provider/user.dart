@@ -6,20 +6,27 @@ import '../model/user.dart';
 
 class UserProvider {
   final db = FirebaseFirestore.instance.collection('User');
-  createuser(User user) async {
+  final user = User(name: 'Stephen', age: 3, sex: 'male', height: 7);
+  var list = [];
+  createuser() async {
     final docRef = db.withConverter(
         fromFirestore: User.fromFirestore,
         toFirestore: ((value, options) => value.toFirestore()));
     await docRef.add(user);
   }
-  getUser()async{
+
+  getUser()  {
     final ref = db.withConverter(
         fromFirestore: User.fromFirestore,
         toFirestore: ((value, options) => value.toFirestore()));
-      final docSnap = await ref.get();
-      final user = docSnap.docs.map((e) => e.data());
-      if(user.isNotEmpty){
-        log('$user');
-      }else{log('empty');}
+    final  docSnap =  ref.snapshots();
+    return docSnap;
+  }
+  delete(index)async{
+     final ref = db.withConverter(
+        fromFirestore: User.fromFirestore,
+        toFirestore: ((value, options) => value.toFirestore()));
+    final  docSnap = await ref.doc(index).delete();
+    return docSnap;
   }
 }

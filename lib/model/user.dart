@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
@@ -14,10 +12,12 @@ class User {
       required this.sex,
       required this.height});
   factory User.fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? option,) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? option,
+  ) {
     final data = snapshot.data();
     return User(
-      name: data?['name'],
+      name: data?['Name'],
       age: data?['age'],
       sex: data?['sex'],
       height: data?['height'],
@@ -25,10 +25,10 @@ class User {
   }
   Map<String, dynamic> toFirestore() {
     return {
-      'Name': name,
-      'age': age,
-      'sex': sex,
-      'height': height,
+      if (name.isNotEmpty) 'Name': name,
+      if (!age.isNegative) 'age': age,
+      if (sex.isNotEmpty) 'sex': sex,
+      if (!height.isNegative) 'height': height,
     };
   }
 }
